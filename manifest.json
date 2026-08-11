@@ -1,0 +1,17 @@
+{
+  "name": "Arbeitszentrale – lokale Fach-Apps",
+  "short_name": "Arbeitszentrale",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f6f8",
+  "theme_color": "#0b2740",
+  "icons": [
+    {
+      "src": "hausmeister-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'none'; font-src 'self' data:; media-src 'self' blob:; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'none'; worker-src 'self'; manifest-src 'self'">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b2740">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Arbeitszentrale">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="hausmeister-logo.svg" type="image/svg+xml">
+<title>Arbeitszentrale – Haupt-App</title>
+<style>
+*{box-sizing:border-box} :root{--navy:#0b2740;--navy2:#123c5a;--ink:#14202b;--muted:#617180;--line:#dbe3e9;--bg:#f3f6f8;--card:#fff;--good:#16734a}
+html{background:var(--bg)}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:var(--ink);background:linear-gradient(180deg,#eaf1f6 0,#f5f7f9 330px,#f3f6f8 100%);min-height:100vh}
+.hero{background:linear-gradient(135deg,#0b2740,#164f74);color:white;padding:calc(18px + env(safe-area-inset-top)) 18px 34px;box-shadow:0 8px 30px #0b274033}
+.heroInner{max-width:1180px;margin:auto}.brand{display:flex;align-items:center;gap:14px}.brand img{width:58px;height:58px;border-radius:15px;background:#fff;padding:5px;box-shadow:0 6px 20px #0003}.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.72;font-weight:800}.hero h1{font-size:clamp(27px,4vw,42px);margin:3px 0 4px;line-height:1.05}.hero p{margin:0;opacity:.88;max-width:760px;line-height:1.45}
+.statusRow{display:flex;gap:8px;flex-wrap:wrap;margin-top:19px}.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid #ffffff36;background:#ffffff16;border-radius:999px;padding:7px 11px;font-size:13px;font-weight:700}.dot{width:9px;height:9px;border-radius:50%;background:#7fe1ad;box-shadow:0 0 0 3px #7fe1ad22}
+main{max-width:1180px;margin:-18px auto 0;padding:0 14px 34px}.intro{background:#fff;border:1px solid #fff;border-radius:18px;padding:16px 18px;box-shadow:0 10px 32px #17354d17;display:flex;gap:16px;align-items:center;justify-content:space-between}.intro strong{font-size:17px}.intro small{display:block;color:var(--muted);margin-top:3px;line-height:1.35}.storageBadge{white-space:nowrap;border-radius:12px;background:#ecf8f1;color:#135b3c;padding:10px 12px;font-weight:800;font-size:13px}
+.sectionHead{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:27px 2px 12px}.sectionHead h2{margin:0;font-size:20px}.sectionHead span{font-size:13px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.card{position:relative;display:flex;flex-direction:column;min-height:190px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;text-decoration:none;color:inherit;box-shadow:0 3px 12px #17354d0c;transition:.16s transform,.16s box-shadow,.16s border-color;overflow:hidden}.card:active{transform:scale(.985)}@media(hover:hover){.card:hover{transform:translateY(-2px);box-shadow:0 12px 26px #17354d17;border-color:#b9cbd7}}
+.card::after{content:"";position:absolute;right:-28px;top:-28px;width:110px;height:110px;border-radius:50%;background:var(--tint,#e8f1f7)}.icon{position:relative;z-index:1;width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:var(--accent,#123c5a);color:#fff;font-size:24px;box-shadow:0 5px 14px #0001}.card h3{margin:16px 0 4px;font-size:18px}.card p{margin:0;color:var(--muted);font-size:14px;line-height:1.42;flex:1}.open{margin-top:15px;font-size:13px;font-weight:850;color:var(--accent,#123c5a)}
+.groupTag{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:850;margin-bottom:7px}.c1{--accent:#a53a2a;--tint:#faeae7}.c2{--accent:#23698f;--tint:#e5f2f8}.c3{--accent:#59449b;--tint:#ede9fb}.c4{--accent:#16734a;--tint:#e4f5ed}.c5{--accent:#087a78;--tint:#e1f4f3}.c6{--accent:#a06613;--tint:#fbf1df}.c7{--accent:#315a85;--tint:#e8f0f8}.c8{--accent:#616b76;--tint:#edf0f2}.c9{--accent:#774563;--tint:#f5e8f0}
+.infoPanel{margin-top:25px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:17px 18px;display:grid;grid-template-columns:1fr 1fr;gap:18px}.infoPanel h3{margin:0 0 7px;font-size:16px}.infoPanel p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}.miniActions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.miniActions a,.miniActions button{border:1px solid #cad5dc;background:#f8fafb;color:#183044;border-radius:10px;padding:9px 11px;font:750 13px inherit;text-decoration:none;cursor:pointer}
+footer{text-align:center;color:#71808d;font-size:12px;padding:6px 16px calc(20px + env(safe-area-inset-bottom));line-height:1.5}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:580px){.hero{padding-left:14px;padding-right:14px}.brand img{width:51px;height:51px}.intro{align-items:flex-start;flex-direction:column}.storageBadge{white-space:normal}.grid{grid-template-columns:1fr}.card{min-height:166px}.infoPanel{grid-template-columns:1fr}.sectionHead{align-items:start;flex-direction:column;gap:3px}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="heroInner">
+<div class="brand"><img src="hausmeister-logo.svg" alt="App-Logo"><div><div class="eyebrow">Lokale Arbeits-Apps</div><h1>Arbeitszentrale</h1><p>Alle Fach-Apps an einem Ort. Jede Anwendung verwaltet ihre eigenen Daten und Sicherungen getrennt.</p></div></div>
+<div class="statusRow"><span class="pill"><span class="dot"></span><span id="netState">Status wird geprüft</span></span><span class="pill">🔒 Getrennte lokale Speicherbereiche</span><span class="pill">▦ 9 Fachmodule</span></div>
+</div></header>
+<main>
+<section class="intro"><div><strong>Ein Startbildschirm – keine gemeinsame Datendatei</strong><small>Die Zentrale öffnet die einzelnen Module. Datensätze, Mitarbeiter, Fotos und Einstellungen bleiben in den jeweiligen App-Speichern.</small></div><div class="storageBadge" id="storageState">Speicherprüfung …</div></section>
+<div class="sectionHead"><div><div class="groupTag">Module</div><h2>Was möchtest du öffnen?</h2></div><span>Für iPad, iPhone und Edge/Browser</span></div>
+<section class="grid">
+<a class="card c1" href="schadensmeldung.html"><div class="icon">⚠</div><h3>Schaden- & Auftragsmeldung</h3><p>Schäden erfassen, Fotos dokumentieren, Aufträge speichern und weitergeben.</p><div class="open">Öffnen →</div></a>
+<a class="card c2" href="verkehrssicherheit.html"><div class="icon">✓</div><h3>Verkehrssicherheit</h3><p>Objektprüfungen, Prüfpunkte, QR-Aufruf, Historie und Fotodokumentation.</p><div class="open">Öffnen →</div></a>
+<a class="card c3" href="notdienstplanung.html"><div class="icon">◷</div><h3>Notdienst-Planung</h3><p>Wochenplanung mit Mitarbeitern, Springer und Abwesenheiten.</p><div class="open">Öffnen →</div></a>
+<a class="card c9" href="notdienstbericht.html"><div class="icon">✎</div><h3>Notdienstbericht</h3><p>Einsätze dokumentieren und bei Bedarf direkt an die Schadensmeldung übergeben.</p><div class="open">Öffnen →</div></a>
+<a class="card c4" href="rufbereitschaft.html"><div class="icon">☎</div><h3>Rufbereitschaft</h3><p>Bereitschaftszeiten erfassen, speichern und mit Doppelunterschrift abschließen.</p><div class="open">Öffnen →</div></a>
+<a class="card c5" href="schluesseluebergabe.html"><div class="icon">⌘</div><h3>Schlüsselübergabe</h3><p>Schlüsselübergaben dokumentieren, unterschreiben und lokal archivieren.</p><div class="open">Öffnen →</div></a>
+<a class="card c6" href="materiallieferung.html"><div class="icon">▣</div><h3>Materiallieferung</h3><p>Material, Artikel und Lieferungen erfassen und lokal verwalten.</p><div class="open">Öffnen →</div></a>
+<a class="card c7" href="arbeitsnachweis.html"><div class="icon">▤</div><h3>Arbeitsnachweis / Rapport</h3><p>Arbeitsleistungen und Rapportdaten erfassen, sichern und ausgeben.</p><div class="open">Öffnen →</div></a>
+<a class="card c8" href="arbeitseinsatz.html"><div class="icon">⚒</div><h3>Arbeitseinsatz</h3><p>Einsätze, Zeiten und Unterschriften strukturiert dokumentieren.</p><div class="open">Öffnen →</div></a>
+</section>
+<section class="infoPanel"><div><h3>Datenschutz & Speicherung</h3><p>Die Startseite liest keine Fachdaten aus den Modulen. Sie prüft nur, ob lokaler Browser-Speicher grundsätzlich funktioniert. Löschen von Browser-/Websitedaten kann lokale App-Daten entfernen.</p></div><div><h3>Verkehrssicherheit – QR-Unterlagen</h3><p>Die vorhandenen QR-Druckseiten sind mit enthalten. Bereits gedruckte QR-Codes können noch auf die bisherige Webadresse zeigen und sollten nach einem endgültigen Umzug geprüft werden.</p><div class="miniActions"><a href="QR_Codes_Direktaufruf.html">Direkt-QR-Blatt</a><a href="QR_Codes_Objekte.html">Objekt-QR-Blatt</a><button type="button" onclick="location.reload()">Status neu prüfen</button></div></div></section>
+</main>
+<footer>© 2026 Ralf Peter Jung – Alle Rechte vorbehalten.<br>Haupt-App ohne gemeinsame Fachdatenbank.</footer>
+<script>
+(function(){
+ const net=document.getElementById('netState'), store=document.getElementById('storageState');
+ function netStatus(){net.textContent=navigator.onLine?'Online – Offline-Dateien werden vorbereitet':'Offline – lokaler Start';}
+ netStatus(); addEventListener('online',netStatus); addEventListener('offline',netStatus);
+ try{const k='__suite_storage_test';localStorage.setItem(k,'1');const ok=localStorage.getItem(k)==='1';localStorage.removeItem(k);store.textContent=ok?'✓ Lokaler Speicher verfügbar':'⚠ Lokaler Speicher blockiert';}catch(e){store.textContent='⚠ Lokaler Speicher blockiert';}
+ if('serviceWorker' in navigator && location.protocol!=='file:'){navigator.serviceWorker.register('./sw.js').catch(()=>{});}
+})();
+</script>
+</body></html>

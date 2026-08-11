@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f4c81">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Notdienstplan">
+  <title>Notdienst Planung</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <style>
+    :root{--bg:#f4f7fa;--card:#fff;--text:#16202a;--muted:#667382;--line:#dce3ea;--primary:#0f4c81;--primary2:#0b3d68;--ok:#1b7f4b;--warn:#a05a00;--danger:#b42318;--purple:#6f42c1;--shadow:0 8px 24px rgba(15,76,129,.08);--radius:16px}
+    *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+    .head{max-width:1240px;margin:auto;padding:14px 18px;display:flex;gap:14px;align-items:center;justify-content:space-between}.brand{display:flex;gap:12px;align-items:center}.logo{width:44px;height:44px;border-radius:12px;background:var(--primary);color:white;display:grid;place-items:center;font-size:23px;box-shadow:var(--shadow)}h1{font-size:20px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:2px}
+    main{max-width:1240px;margin:auto;padding:18px}.tabs{display:flex;gap:8px;overflow:auto;padding-bottom:10px}.tab{border:1px solid var(--line);background:white;padding:10px 14px;border-radius:999px;font-weight:700;white-space:nowrap;cursor:pointer}.tab.active{background:var(--primary);color:white;border-color:var(--primary)}
+    .panel{display:none}.panel.active{display:block}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}.span12{grid-column:span 12}.span8{grid-column:span 8}.span6{grid-column:span 6}.span4{grid-column:span 4}.span3{grid-column:span 3}
+    h2{font-size:18px;margin:0 0 12px}h3{font-size:15px;margin:0 0 10px}.small{font-size:12px;color:var(--muted)}label{display:block;font-size:13px;font-weight:700;margin:0 0 6px}input,select,textarea,button{font:inherit}input,select,textarea{width:100%;padding:11px 12px;border:1px solid #cbd5df;border-radius:10px;background:white;color:var(--text)}textarea{min-height:80px;resize:vertical}.row{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}.f6{grid-column:span 6}.f4{grid-column:span 4}.f3{grid-column:span 3}.f12{grid-column:span 12}
+    .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}button,.btn{border:0;border-radius:10px;padding:10px 13px;font-weight:700;cursor:pointer;background:#e9eef3;color:var(--text)}button.primary{background:var(--primary);color:#fff}button.primary:hover{background:var(--primary2)}button.danger{background:#fdebea;color:var(--danger)}button.ghost{background:white;border:1px solid var(--line)}
+    .notice{border-left:4px solid var(--primary);background:#eef6fc;padding:12px 14px;border-radius:10px}.notice.warn{border-left-color:var(--warn);background:#fff7e8}.notice.ok{border-left-color:var(--ok);background:#effaf4}.notice.danger{border-left-color:var(--danger);background:#fff1f0}.notice.purple{border-left-color:var(--purple);background:#f6f1ff}
+    .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.stat{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:12px}.stat b{display:block;font-size:22px;margin-top:4px}.stat .split{display:flex;gap:10px;margin-top:5px;flex-wrap:wrap}
+    .tablewrap{overflow:auto;border:1px solid var(--line);border-radius:12px}table{border-collapse:collapse;width:100%;min-width:1050px}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;vertical-align:middle}th{position:sticky;top:0;background:#f2f6f9;z-index:2;font-size:12px}tr:last-child td{border-bottom:0}.badge{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:800;margin:1px 2px 1px 0}.b-ok{background:#e8f6ee;color:#17663d}.b-warn{background:#fff1d6;color:#8a4b00}.b-danger{background:#feeceb;color:#a01c14}.b-info{background:#eaf3fb;color:#0f4c81}.b-purple{background:#f0e8ff;color:#56339a}.b-gray{background:#edf0f3;color:#4c5967}
+    .item{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:8px}.item strong{display:block}.muted{color:var(--muted)}.hidden{display:none!important}.footer{padding:24px 0 10px;color:var(--muted);font-size:11px;text-align:center}.legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    @media(max-width:800px){.span8,.span6,.span4,.span3{grid-column:span 12}.f6,.f4,.f3{grid-column:span 12}.stats{grid-template-columns:repeat(2,1fr)}.head{align-items:flex-start}.desktopOnly{display:none}}
+    @media print{header,.tabs,.no-print,.actions{display:none!important}body{background:white}.card{box-shadow:none;border:0;padding:0}.panel{display:none!important}#plan.panel{display:block!important}main{max-width:none;padding:0}.tablewrap{border:0}table{min-width:0}th{position:static}.manualCol{display:none}}
+  </style>
+</head>
+<body>
+<a href="index.html" class="suiteHomeButton noPrint" style="position:fixed;right:10px;top:10px;z-index:99999;background:#0b2740;color:#fff;padding:9px 12px;border-radius:10px;text-decoration:none;font:700 14px -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;box-shadow:0 4px 14px #0004;border:1px solid #ffffff33">⌂ Hauptmenü</a>
+
+<header><div class="head"><div class="brand"><div class="logo">☎</div><div><h1>Notdienst Planung</h1><div class="sub">4er-Wochenrotation + Springer · Urlaub · Abwesenheit · Vertretung · Feiertage</div></div></div><div class="small desktopOnly">Lokale Speicherung aktiv</div></div></header>
+<main>
+  <div class="tabs no-print">
+    <button class="tab active" data-tab="plan">Dienstplan</button>
+    <button class="tab" data-tab="absence">Urlaub & Abwesenheit</button>
+    <button class="tab" data-tab="settings">Einstellungen</button>
+    <button class="tab" data-tab="data">Sicherung & Export</button>
+    <button class="tab" data-tab="help">Anleitung</button>
+  </div>
+
+  <section id="plan" class="panel active">
+    <div class="grid">
+      <div class="card span12 no-print"><div class="row"><div class="f3"><label for="planYear">Planungsjahr</label><select id="planYear"></select></div><div class="f6"><label for="planFilter">Anzeige</label><select id="planFilter"><option value="all">Alle Wochen</option><option value="current">Ab aktueller Woche</option><option value="conflict">Nur Abwesenheit / Vertretung</option><option value="holiday">Nur Wochen mit Feiertag</option></select></div><div class="f3"><label>&nbsp;</label><button class="primary" style="width:100%" id="printPlan">Dienstplan drucken</button></div></div></div>
+      <div class="card span12"><h2>Jahresübersicht</h2><div id="summaryStats" class="stats"></div><div class="small" style="margin-top:8px">„Gesamt“ zählt tatsächlich übernommene Notdienstwochen. „Vertretung“ zeigt zusätzliche Einsätze wegen Urlaub oder Abwesenheit.</div></div>
+      <div class="card span12"><div id="planInfo" class="notice ok" style="margin-bottom:12px"></div><div class="tablewrap"><table><thead><tr><th>KW</th><th>Zeitraum</th><th>Feiertage</th><th>Regeldienst</th><th>Status</th><th>Tatsächlicher Notdienst</th><th class="manualCol">Manuelle Änderung</th></tr></thead><tbody id="scheduleBody"></tbody></table></div><div class="legend"><span class="badge b-ok">Regulär</span><span class="badge b-warn">Vertretung</span><span class="badge b-purple">Feiertag</span><span class="badge b-danger">Konflikt / unbesetzt</span></div></div>
+    </div>
+  </section>
+
+  <section id="absence" class="panel">
+    <div class="grid">
+      <div class="card span4"><h2>Urlaub eintragen</h2><form id="vacForm"><div class="row"><div class="f12"><label for="vacPerson">Mitarbeiter</label><select id="vacPerson" required></select></div><div class="f6"><label for="vacStart">Von</label><input id="vacStart" type="date" required></div><div class="f6"><label for="vacEnd">Bis</label><input id="vacEnd" type="date" required></div><div class="f12"><label for="vacNote">Notiz (optional)</label><input id="vacNote" maxlength="80" placeholder="z. B. Sommerurlaub"></div></div><div class="actions"><button class="primary" type="submit">Urlaub speichern</button></div></form></div>
+      <div class="card span4"><h2>Abwesenheit eintragen</h2><form id="absForm"><div class="row"><div class="f12"><label for="absPerson">Mitarbeiter</label><select id="absPerson" required></select></div><div class="f6"><label for="absStart">Von</label><input id="absStart" type="date" required></div><div class="f6"><label for="absEnd">Bis</label><input id="absEnd" type="date" required></div><div class="f12"><label for="absNote">Notiz (optional)</label><input id="absNote" maxlength="80" placeholder="z. B. Fortbildung, Freistellung, sonstiger Ausfall"></div></div><div class="actions"><button class="primary" type="submit">Abwesenheit speichern</button></div></form></div>
+      <div class="card span4"><h2>Vertretungsregel</h2><div class="notice purple"><b>Springer-Regel:</b> Ist der Regeldienst abwesend, prüft die App zuerst den <b>Springer (Mitarbeiter 5)</b>. Ist der Springer ebenfalls abwesend, wird die Vertretung unter den übrigen verfügbaren regulären Mitarbeitern möglichst fair verteilt: zuerst nach der geringsten Zahl tatsächlicher Dienste, dann nach der geringeren Zahl an Vertretungen.</div></div>
+      <div class="card span6"><h2>Gespeicherter Urlaub</h2><div id="vacList"></div></div>
+      <div class="card span6"><h2>Gespeicherte Abwesenheit</h2><div id="absList"></div></div>
+    </div>
+  </section>
+
+  <section id="settings" class="panel">
+    <div class="grid">
+      <div class="card span6"><h2>Fünf Mitarbeiter</h2><div class="row" id="nameFields"></div><div class="small" style="margin-top:8px">Die Namen werden ausschließlich lokal im Browser dieses Geräts gespeichert. Es findet keine automatische Übertragung an einen Server statt. Export- und Sicherungsdateien enthalten die Namen nur, wenn du sie selbst erzeugst.</div></div>
+      <div class="card span6"><h2>Start der Rotation</h2><div class="row"><div class="f6"><label for="rotationDate">Start-Montag</label><input type="date" id="rotationDate"></div><div class="f6"><label for="rotationPerson">Wer hat in dieser Startwoche Dienst?</label><select id="rotationPerson"></select></div></div><div class="notice warn" style="margin-top:12px">Eine Änderung berechnet den Grundturnus neu. Urlaub, Abwesenheit und manuelle Wochenänderungen bleiben gespeichert.</div></div>
+      <div class="card span6"><h2>Feiertage</h2><div class="row"><div class="f6"><label for="holidayState">Bundesland</label><select id="holidayState"></select></div><div class="f6"><label for="showHolidays">Im Plan anzeigen</label><select id="showHolidays"><option value="true">Ja</option><option value="false">Nein</option></select></div></div><div class="small" style="margin-top:8px">Feiertage sind reine Hinweise und verändern die Notdienstrotation nicht. Kommunale/regionale Sonderfälle sind nicht automatisch enthalten.</div></div>
+      <div class="card span6"><h2>Planungsprinzip</h2><div class="notice ok">Die Grundrotation bleibt immer Mitarbeiter 1 → 2 → 3 → 4. Mitarbeiter 5 ist der Springer und gehört nicht zur Grundrotation. Urlaub oder Abwesenheit verschieben die folgenden Wochen nicht.</div></div>
+      <div class="card span12"><div class="actions"><button class="primary" id="saveSettings">Einstellungen speichern</button></div></div>
+    </div>
+  </section>
+
+  <section id="data" class="panel">
+    <div class="grid">
+      <div class="card span6"><h2>Datensicherung</h2><p class="small">Sichert Namen, Rotation, Urlaub, Abwesenheit, Feiertagseinstellung und manuelle Änderungen in einer JSON-Datei.</p><div class="actions"><button class="primary" id="backupBtn">Sicherung herunterladen</button><label class="btn ghost" for="restoreInput">Sicherung wiederherstellen</label><input class="hidden" id="restoreInput" type="file" accept="application/json,.json"></div></div>
+      <div class="card span6"><h2>Export</h2><p class="small">CSV-Datei für Excel / Excel 365 mit Regeldienst, Abwesenheitsgrund, Vertretung und Feiertagen.</p><div class="actions"><button class="primary" id="csvBtn">CSV für Excel erstellen</button></div></div>
+      <div class="card span12"><h2>Datenschutz & Speicherung</h2><div class="notice ok"><b>Keine automatische Übertragung:</b> Die App speichert Eingaben lokal im Browser. Es sind kein Benutzerkonto, keine Cloud-Datenbank, keine Analyse-Dienste und keine externen Bibliotheken eingebaut. Daten verlassen das Gerät nur, wenn eine Sicherungs- oder CSV-Datei bewusst weitergegeben wird.</div><div class="actions"><button class="danger" id="resetBtn">Alle lokalen App-Daten löschen</button></div></div>
+    </div>
+  </section>
+
+  <section id="help" class="panel"><div class="grid"><div class="card span12"><h2>Anleitung</h2><ol><li>Unter <b>Einstellungen</b> die fünf Namen eintragen; der fünfte Name ist der Springer.</li><li>Einen Montag als Startdatum und die Person für die erste Rotationswoche festlegen.</li><li>Optional das Bundesland für die Feiertagsanzeige auswählen.</li><li>Unter <b>Urlaub & Abwesenheit</b> Abwesenheiten mit Von-/Bis-Datum eintragen.</li><li>Ist der Regeldienst abwesend, übernimmt zuerst der verfügbare Springer. Ist der Springer ebenfalls abwesend, verteilt die App die Vertretung möglichst gleichmäßig auf die übrigen verfügbaren regulären Mitarbeiter.</li><li>Urlaub und Abwesenheit verändern die Grundrotation der Folgewochen nicht.</li><li>Eine einzelne Woche kann im Dienstplan manuell geändert werden. „Automatisch“ entfernt diese Änderung.</li><li>Eine manuelle Zuweisung an eine im selben Zeitraum abwesende Person wird rot als Konflikt angezeigt.</li><li>Unter <b>Sicherung & Export</b> regelmäßig eine JSON-Sicherung erstellen. CSV lässt sich in Excel öffnen.</li></ol><h3>Feiertage</h3><p>Die App berechnet die üblichen gesetzlichen Feiertage offline anhand des gewählten Bundeslandes. Feiertage dienen nur als Hinweis. Regionale Sonderregelungen, die nicht im gesamten Bundesland gelten, werden bewusst nicht pauschal eingetragen.</p><h3>Installation als Home-App</h3><p>Auf iPhone/iPad die Web-App über Safari öffnen und „Teilen“ → „Zum Home-Bildschirm“ wählen. Für zuverlässige PWA-Offline-Nutzung muss die App einmal über HTTPS bereitgestellt worden sein. Auf Windows kann sie über Edge als App installiert werden.</p><h3>Wichtiger technischer Punkt</h3><p>Browserdaten können verloren gehen, wenn Website-Daten gelöscht werden, der Browser zurückgesetzt wird oder Geräteverwaltung den Speicher bereinigt. Deshalb die Sicherungsfunktion verwenden.</p></div></div></section>
+
+  <div class="footer">Notdienst Planung · Offline-orientierte Einzelgeräte-App · Version 2.0</div>
+</main>
+<script>
+(()=>{
+'use strict';
+const KEY='notdienst_planer_v1';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const today=new Date();
+const STATES={ALL:'Nur bundesweite Feiertage',BW:'Baden-Württemberg',BY:'Bayern',BE:'Berlin',BB:'Brandenburg',HB:'Bremen',HH:'Hamburg',HE:'Hessen',MV:'Mecklenburg-Vorpommern',NI:'Niedersachsen',NW:'Nordrhein-Westfalen',RP:'Rheinland-Pfalz',SL:'Saarland',SN:'Sachsen',ST:'Sachsen-Anhalt',SH:'Schleswig-Holstein',TH:'Thüringen'};
+function clone(v){return JSON.parse(JSON.stringify(v))}
+function mondayOf(d){const x=new Date(d);x.setHours(12,0,0,0);const day=x.getDay()||7;x.setDate(x.getDate()-day+1);return x}
+function isoDate(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${day}`}
+function parseDate(s){const [y,m,d]=String(s).split('-').map(Number);return new Date(y,m-1,d,12)}
+function fmt(d){return new Intl.DateTimeFormat('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'}).format(d)}
+function isoWeek(d){const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const day=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-day);const y0=new Date(Date.UTC(t.getUTCFullYear(),0,1));return Math.ceil((((t-y0)/86400000)+1)/7)}
+function weekKey(d){const th=new Date(d);th.setDate(th.getDate()+3);return `${th.getFullYear()}-${String(isoWeek(d)).padStart(2,'0')}`}
+function overlap(a1,a2,b1,b2){return a1<=b2&&b1<=a2}
+function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x}
+function uid(){return (crypto.randomUUID?crypto.randomUUID():`${Date.now()}-${Math.random()}`)}
+const defaultState={names:['Mitarbeiter 1','Mitarbeiter 2','Mitarbeiter 3','Mitarbeiter 4','Springer'],rotationDate:isoDate(mondayOf(today)),rotationPerson:0,vacations:[],absences:[],overrides:{},holidayState:'ALL',showHolidays:true};
+let state=load();
+function normalize(v){
+  const raw=v&&typeof v==='object'?v:{};
+  const out={...clone(defaultState),...raw};
+  if(Array.isArray(raw.names)){
+    const oldNames=raw.names.slice(0,5);
+    while(oldNames.length<5)oldNames.push(oldNames.length===4?'Springer':`Mitarbeiter ${oldNames.length+1}`);
+    out.names=oldNames.map((n,i)=>String(n|| (i===4?'Springer':`Mitarbeiter ${i+1}`)));
+  }else out.names=clone(defaultState.names);
+  out.vacations=Array.isArray(raw.vacations)?raw.vacations:[];
+  out.absences=Array.isArray(raw.absences)?raw.absences:(Array.isArray(raw.sickness)?raw.sickness:[]);
+  delete out.sickness;
+  out.overrides=raw.overrides&&typeof raw.overrides==='object'?raw.overrides:{};
+  out.rotationPerson=Math.min(3,Math.max(0,Number(raw.rotationPerson)||0));
+  out.holidayState=STATES[out.holidayState]?out.holidayState:'ALL';
+  out.showHolidays=out.showHolidays!==false;
+  return out
+}
+function load(){try{const v=JSON.parse(localStorage.getItem(KEY)||'null');return v?normalize(v):clone(defaultState)}catch{return clone(defaultState)}}
+function save(){localStorage.setItem(KEY,JSON.stringify(state));renderAll()}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function weekMondays(year){const out=[];let d=mondayOf(new Date(year,0,4,12));while(true){const th=addDays(d,3);if(th.getFullYear()>year)break;if(th.getFullYear()===year)out.push(new Date(d));d=addDays(d,7)}return out}
+function baseIndex(mon){const start=mondayOf(parseDate(state.rotationDate));const diff=Math.round((mon-start)/604800000);return ((Number(state.rotationPerson)+diff)%4+4)%4}
+function absencesFor(idx,start,end){const result=[];state.vacations.forEach(v=>{if(Number(v.person)===idx&&overlap(start,end,parseDate(v.start),parseDate(v.end)))result.push({type:'Urlaub',entry:v})});state.absences.forEach(v=>{if(Number(v.person)===idx&&overlap(start,end,parseDate(v.start),parseDate(v.end)))result.push({type:'Abwesenheit',entry:v})});return result}
+function isUnavailable(idx,start,end){return absencesFor(idx,start,end).length>0}
+function easterSunday(year){let a=year%19,b=Math.floor(year/100),c=year%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),month=Math.floor((h+l-7*m+114)/31),day=((h+l-7*m+114)%31)+1;return new Date(year,month-1,day,12)}
+function holidayList(year,stateCode){const e=easterSunday(year);const list=[];const add=(date,name)=>list.push({date:isoDate(date),name});const fixed=(m,d,name)=>add(new Date(year,m-1,d,12),name);
+  fixed(1,1,'Neujahr');add(addDays(e,-2),'Karfreitag');add(addDays(e,1),'Ostermontag');fixed(5,1,'Tag der Arbeit');add(addDays(e,39),'Christi Himmelfahrt');add(addDays(e,50),'Pfingstmontag');fixed(10,3,'Tag der Deutschen Einheit');fixed(12,25,'1. Weihnachtstag');fixed(12,26,'2. Weihnachtstag');
+  if(['BW','BY','ST'].includes(stateCode))fixed(1,6,'Heilige Drei Könige');
+  if(['BE','MV'].includes(stateCode))fixed(3,8,'Internationaler Frauentag');
+  if(['BW','BY','HE','NW','RP','SL'].includes(stateCode))add(addDays(e,60),'Fronleichnam');
+  if(stateCode==='SL')fixed(8,15,'Mariä Himmelfahrt');
+  if(['BB','HB','HH','MV','NI','SN','ST','SH','TH'].includes(stateCode))fixed(10,31,'Reformationstag');
+  if(['BW','BY','NW','RP','SL'].includes(stateCode))fixed(11,1,'Allerheiligen');
+  if(stateCode==='TH')fixed(9,20,'Weltkindertag');
+  if(stateCode==='SN'){const nov23=new Date(year,10,23,12);const day=nov23.getDay();const offset=((day-3+7)%7)||7;add(addDays(nov23,-offset),'Buß- und Bettag')}
+  return list.sort((a,b)=>a.date.localeCompare(b.date));
+}
+function holidaysInWeek(mon){if(!state.showHolidays)return[];const end=addDays(mon,6),years=[...new Set([mon.getFullYear(),end.getFullYear()])];return years.flatMap(y=>holidayList(y,state.holidayState)).filter(h=>{const d=parseDate(h.date);return d>=mon&&d<=end}).sort((a,b)=>a.date.localeCompare(b.date))}
+function rotationDistance(base,idx){return (idx-base+4)%4||4}
+function buildSchedule(year){
+  const weeks=weekMondays(year),counts=[0,0,0,0,0],subCounts=[0,0,0,0,0],out=[];
+  for(const mon of weeks){
+    const end=addDays(mon,6),base=baseIndex(mon),key=weekKey(mon),baseAbs=absencesFor(base,mon,end);
+    let actual=null,reason='none',conflict=false,actualAbs=[];
+    if(Object.prototype.hasOwnProperty.call(state.overrides,key)){
+      actual=Number(state.overrides[key]);reason='manual';actualAbs=absencesFor(actual,mon,end);conflict=actualAbs.length>0;
+    }else if(baseAbs.length===0){
+      actual=base;reason='normal';
+    }else if(!isUnavailable(4,mon,end)){
+      actual=4;reason='springer';subCounts[actual]++;
+    }else{
+      const candidates=[0,1,2,3].filter(i=>i!==base&&!isUnavailable(i,mon,end));
+      if(candidates.length){
+        candidates.sort((a,b)=>(counts[a]-counts[b])||(subCounts[a]-subCounts[b])||(rotationDistance(base,a)-rotationDistance(base,b))||(a-b));
+        actual=candidates[0];reason='substitute';subCounts[actual]++;
+      }else{reason='none';conflict=true}
+    }
+    if(actual!==null)counts[actual]++;
+    out.push({mon,end,key,base,baseAbs,actual,actualAbs,reason,conflict,holidays:holidaysInWeek(mon),counts:[...counts],subCounts:[...subCounts]});
+  }
+  return {weeks:out,counts,subCounts}
+}
+function renderSelectOptions(sel){sel.innerHTML=state.names.map((n,i)=>`<option value="${i}">${esc(n||`Person ${i+1}`)}</option>`).join('')}
+function renderSettings(){const nf=$('#nameFields');nf.innerHTML='';state.names.forEach((n,i)=>nf.insertAdjacentHTML('beforeend',`<div class="f6"><label for="name${i}">${i===4?'Springer (Mitarbeiter 5)':`Mitarbeiter ${i+1}`}</label><input id="name${i}" maxlength="50" value="${esc(n)}"></div>`));$('#rotationDate').value=state.rotationDate;$('#rotationPerson').innerHTML=state.names.slice(0,4).map((n,i)=>`<option value="${i}">${esc(n)}</option>`).join('');$('#rotationPerson').value=String(state.rotationPerson);renderSelectOptions($('#vacPerson'));renderSelectOptions($('#absPerson'));$('#holidayState').innerHTML=Object.entries(STATES).map(([k,v])=>`<option value="${k}">${esc(v)}</option>`).join('');$('#holidayState').value=state.holidayState;$('#showHolidays').value=String(state.showHolidays)}
+function renderItems(containerId,items,type){const list=$(containerId);const sorted=[...items].sort((a,b)=>a.start.localeCompare(b.start));if(!sorted.length){list.innerHTML=`<div class="notice">Noch keine ${type==='vac'?'Urlaubszeiten':'Abwesenheitszeiten'} eingetragen.</div>`;return}list.innerHTML=sorted.map(v=>`<div class="item"><div><strong>${esc(state.names[v.person]||'Mitarbeiter')}</strong><div>${fmt(parseDate(v.start))} – ${fmt(parseDate(v.end))}</div>${v.note?`<div class="small">${esc(v.note)}</div>`:''}</div><button class="danger" data-del-${type}="${esc(v.id)}">Löschen</button></div>`).join('');$$(`[data-del-${type}]`).forEach(b=>b.onclick=()=>{if(type==='vac')state.vacations=state.vacations.filter(v=>v.id!==b.dataset.delVac);else state.absences=state.absences.filter(v=>v.id!==b.dataset.delAbs);save()})}
+function renderAbsence(){renderItems('#vacList',state.vacations,'vac');renderItems('#absList',state.absences,'abs')}
+function renderYears(){const sel=$('#planYear');const cur=Number(sel.value)||today.getFullYear();const years=[];for(let y=today.getFullYear()-1;y<=today.getFullYear()+5;y++)years.push(y);sel.innerHTML=years.map(y=>`<option value="${y}" ${y===cur?'selected':''}>${y}</option>`).join('')}
+function absLabel(list){return [...new Set(list.map(x=>x.type))].join(' + ')}
+function renderPlan(){const year=Number($('#planYear').value)||today.getFullYear(),filter=$('#planFilter').value,curMon=mondayOf(today),built=buildSchedule(year);let rows='',subs=0,uncovered=0,manualConflicts=0;for(const a of built.weeks){if(a.reason==='substitute'||a.reason==='springer')subs++;if(a.actual===null)uncovered++;if(a.reason==='manual'&&a.conflict)manualConflicts++;const hasAbs=a.baseAbs.length>0||a.actualAbs.length>0;const hasHoliday=a.holidays.length>0;if(filter==='current'&&a.mon<curMon)continue;if(filter==='conflict'&&!(hasAbs||a.reason==='substitute'||a.reason==='none'||a.conflict))continue;if(filter==='holiday'&&!hasHoliday)continue;
+    let status='';if(a.reason==='normal')status='<span class="badge b-ok">Regulär</span>';else if(a.reason==='springer')status=`<span class="badge b-warn">${esc(absLabel(a.baseAbs))} · Springer</span>`;else if(a.reason==='substitute')status=`<span class="badge b-warn">${esc(absLabel(a.baseAbs))} · Vertretung</span>`;else if(a.reason==='manual'&&a.conflict)status=`<span class="badge b-danger">Manuell trotz ${esc(absLabel(a.actualAbs))}</span>`;else if(a.reason==='manual')status=a.baseAbs.length?`<span class="badge b-info">Manuell · Regeldienst ${esc(absLabel(a.baseAbs))}</span>`:'<span class="badge b-info">Manuell</span>';else status='<span class="badge b-danger">Keine Person verfügbar</span>';
+    const holidays=a.holidays.length?a.holidays.map(h=>`<span class="badge b-purple">${fmt(parseDate(h.date)).slice(0,5)} ${esc(h.name)}</span>`).join(' '):'<span class="muted">–</span>';
+    const options='<option value="">Automatisch</option>'+state.names.map((n,i)=>`<option value="${i}" ${String(state.overrides[a.key])===String(i)?'selected':''}>${esc(n)}</option>`).join('');
+    const baseText=`${esc(state.names[a.base])}${a.baseAbs.length?`<div class="small">${esc(absLabel(a.baseAbs))}</div>`:''}`;
+    rows+=`<tr><td><b>KW ${isoWeek(a.mon)}</b></td><td>${fmt(a.mon)} – ${fmt(a.end)}</td><td>${holidays}</td><td>${baseText}</td><td>${status}</td><td><b>${a.actual===null?'NICHT BESETZT':esc(state.names[a.actual])}</b></td><td class="manualCol"><select data-override="${a.key}">${options}</select></td></tr>`}
+  $('#scheduleBody').innerHTML=rows||'<tr><td colspan="7">Keine Wochen für diesen Filter.</td></tr>';$$('[data-override]').forEach(s=>s.onchange=()=>{if(s.value==='')delete state.overrides[s.dataset.override];else state.overrides[s.dataset.override]=Number(s.value);save()});
+  $('#summaryStats').innerHTML=state.names.map((n,i)=>`<div class="stat"><span>${esc(n)}</span><b>${built.counts[i]}</b><span class="small">Gesamtwochen</span><div class="split"><span class="badge b-warn">Vertretung: ${built.subCounts[i]}</span></div></div>`).join('');
+  $('#planInfo').className='notice '+(uncovered||manualConflicts?'danger':subs?'warn':'ok');if(uncovered||manualConflicts){$('#planInfo').innerHTML=`<b>Prüfung nötig:</b> ${uncovered} unbesetzte Woche(n), ${manualConflicts} manuelle Konflikt(e).` }else if(subs){$('#planInfo').innerHTML=`Im Jahr ${year} gibt es <b>${subs} automatische Vertretung(en)</b>. Der Springer wird zuerst geprüft; falls er nicht verfügbar ist, greift die faire Ersatzverteilung.`}else{$('#planInfo').innerHTML=`Im Jahr ${year} bestehen aktuell keine automatischen Vertretungen oder Besetzungskonflikte.`}}
+function renderAll(){renderSettings();renderAbsence();renderPlan()}
+$$('.tab').forEach(t=>t.onclick=()=>{$$('.tab').forEach(x=>x.classList.remove('active'));$$('.panel').forEach(x=>x.classList.remove('active'));t.classList.add('active');$('#'+t.dataset.tab).classList.add('active')});
+function submitAbsence(kind){const p=kind==='vac'?'vac':'abs',start=$(`#${p}Start`).value,end=$(`#${p}End`).value;if(!start||!end)return;if(end<start){alert('Das Enddatum darf nicht vor dem Startdatum liegen.');return}const entry={id:uid(),person:Number($(`#${p}Person`).value),start,end,note:$(`#${p}Note`).value.trim()};if(kind==='vac')state.vacations.push(entry);else state.absences.push(entry);$(`#${p}Form`).reset();save()}
+$('#vacForm').onsubmit=e=>{e.preventDefault();submitAbsence('vac')};$('#absForm').onsubmit=e=>{e.preventDefault();submitAbsence('abs')};
+$('#saveSettings').onclick=()=>{const names=[0,1,2,3,4].map(i=>$('#name'+i).value.trim()||(i===4?'Springer':`Mitarbeiter ${i+1}`)),rd=$('#rotationDate').value;if(!rd){alert('Bitte einen Start-Montag wählen.');return}if(isoDate(mondayOf(parseDate(rd)))!==rd){alert('Das Startdatum muss ein Montag sein.');return}state.names=names;state.rotationDate=rd;state.rotationPerson=Number($('#rotationPerson').value);state.holidayState=$('#holidayState').value;state.showHolidays=$('#showHolidays').value==='true';save();alert('Einstellungen gespeichert.')};
+$('#planYear').onchange=renderPlan;$('#planFilter').onchange=renderPlan;$('#printPlan').onclick=()=>window.print();
+function download(name,text,type){const blob=new Blob([text],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+$('#backupBtn').onclick=()=>download(`Notdienst_Sicherung_${isoDate(today)}.json`,JSON.stringify({app:'Notdienst Planung',version:3,created:new Date().toISOString(),data:state},null,2),'application/json');
+$('#restoreInput').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const j=JSON.parse(await f.text()),d=j.data||j;if(!Array.isArray(d.names)||d.names.length<4||!Array.isArray(d.vacations))throw new Error();state=normalize(d);save();alert('Sicherung wurde wiederhergestellt.')}catch{alert('Die Sicherungsdatei ist ungültig oder nicht kompatibel.')}e.target.value=''};
+$('#csvBtn').onclick=()=>{const year=Number($('#planYear').value)||today.getFullYear(),built=buildSchedule(year),rows=[['Kalenderwoche','Von','Bis','Feiertage','Regeldienst','Abwesenheit Regeldienst','Status','Tatsächlicher Notdienst']];built.weeks.forEach(a=>{const st=a.reason==='normal'?'Regulär':a.reason==='springer'?'Springer':a.reason==='substitute'?'Automatische Vertretung':a.reason==='manual'?(a.conflict?'Manuell - Konflikt':'Manuell'):'Nicht besetzt';rows.push([`KW ${isoWeek(a.mon)}`,isoDate(a.mon),isoDate(a.end),a.holidays.map(h=>`${h.date} ${h.name}`).join(' | '),state.names[a.base],absLabel(a.baseAbs),st,a.actual===null?'NICHT BESETZT':state.names[a.actual]])});const csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(';')).join('\r\n');download(`Notdienstplan_${year}.csv`,csv,'text/csv;charset=utf-8')};
+$('#resetBtn').onclick=()=>{if(confirm('Wirklich alle lokal gespeicherten Daten dieser App löschen?')){localStorage.removeItem(KEY);state=clone(defaultState);renderAll()}};
+renderYears();renderAll();
+if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'none'; img-src 'self' data: blob:; object-src 'none'; frame-src 'none'; base-uri 'self'; worker-src 'self'; manifest-src 'self'">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Rapport">
+<meta name="theme-color" content="#123c5a">
+<link rel="manifest" href="manifest.json">
+<title>Arbeitsnachweis / Rapport</title>
+<style>
+* { box-sizing:border-box; }
+body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif; background:#eef1f4; color:#111; }
+header { background:#123c5a; color:#fff; padding:14px 18px; display:flex; align-items:center; justify-content:space-between; gap:14px; position:sticky; top:0; z-index:20; }
+.header-title { font-size:clamp(21px,2.4vw,30px); font-weight:800; text-align:center; flex:1; }
+.header-left,.header-right { display:flex; gap:10px; align-items:center; min-width:160px; }
+.header-left { justify-content:flex-start; }
+.header-right { justify-content:flex-end; }
+.topbtn { border:1px solid rgba(255,255,255,.28); background:transparent; color:#fff; border-radius:10px; padding:10px 14px; font-size:17px; font-weight:700; cursor:pointer; }
+main { max-width:1450px; margin:0 auto; padding:18px; }
+.notice { background:#f6fbff; border:1px solid #c6d8ea; color:#274f7d; border-radius:12px; padding:12px 14px; margin-bottom:14px; text-align:center; font-weight:600; }
+.layout { display:grid; grid-template-columns:370px 1fr; gap:16px; align-items:start; }
+.card { background:#fff; border-radius:16px; box-shadow:0 2px 10px rgba(0,0,0,.08); padding:16px; }
+.card h2 { margin:0 0 14px; font-size:20px; }
+label { display:block; margin:0 0 6px; font-weight:750; font-size:15px; }
+input, select, button { font:inherit; }
+input[type="text"], input[type="number"], input[type="date"], select { width:100%; border:1px solid #bfc7d1; border-radius:10px; padding:11px 12px; background:#fff; font-size:16px; }
+button { border:0; border-radius:12px; padding:11px 15px; background:#123c5a; color:#fff; cursor:pointer; font-weight:800; font-size:16px; }
+button.secondary { background:#fff; color:#123c5a; border:1px solid #9fb5c9; }
+button.red { background:#b42318; }
+button.green { background:#18794e; }
+button.small { padding:8px 12px; font-size:14px; border-radius:10px; }
+.row2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.objList { border:1px solid #d5dbe3; border-radius:12px; max-height:520px; overflow:auto; background:#fbfcfd; }
+.objItem { display:flex; gap:10px; align-items:flex-start; padding:10px 12px; border-bottom:1px solid #e7ecf1; }
+.objItem:last-child { border-bottom:0; }
+.objItem input { margin-top:3px; width:21px; height:21px; }
+.objItem span { font-size:15px; font-weight:650; }
+.muted { color:#58616b; font-size:14px; line-height:1.45; }
+.objActions { display:flex; gap:10px; margin-top:12px; }
+.infoBand { background:#f7fbff; border:1px solid #c8dbf1; color:#244977; border-radius:12px; padding:12px 14px; margin-bottom:14px; font-weight:700; }
+.summaryBand { border-radius:12px; padding:12px 14px; margin-top:12px; font-weight:700; background:#edf8f1; border:1px solid #93d1a8; color:#19663d; }
+.dayBlock { border:1px solid #d7dee7; border-radius:14px; overflow:hidden; margin-bottom:14px; }
+.dayHeader { display:grid; grid-template-columns:110px 170px 1fr auto; gap:12px; align-items:end; padding:12px; background:#f9fbfd; border-bottom:1px solid #dfe6ee; }
+.dayName { font-size:28px; font-weight:800; line-height:1; color:#123c5a; }
+.dayRows { padding:12px; display:grid; gap:10px; }
+.taskRow { display:grid; grid-template-columns:minmax(260px,1.45fr) minmax(220px,1fr) 110px 44px; gap:10px; align-items:start; }.taskChooser{display:grid;gap:6px}.customTask{display:none}.taskHint{font-size:12px;color:#5d6874;margin-top:2px}
+.taskRow .removeRow { width:44px; height:44px; padding:0; font-size:20px; line-height:1; }
+.dayFooter { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:0 12px 12px; flex-wrap:wrap; }
+.dayTotal { font-weight:800; font-size:18px; color:#123c5a; }
+.bottomBar { display:grid; grid-template-columns:repeat(6,1fr); gap:12px; margin-top:16px; }
+.savedTableWrap { overflow:auto; }
+table.saved { width:100%; border-collapse:collapse; min-width:700px; }
+table.saved th, table.saved td { border:1px solid #d8e0e7; padding:10px; text-align:left; }
+table.saved th { background:#edf3f8; }
+.previewOverlay { position:fixed; inset:0; background:rgba(10,18,28,.52); display:none; z-index:100; padding:18px; overflow:auto; }
+.previewWrap { max-width:1200px; margin:0 auto; }
+.previewToolbar { display:flex; justify-content:space-between; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
+.previewSheet { background:#fff; border-radius:18px; box-shadow:0 10px 34px rgba(0,0,0,.2); padding:26px; }
+.previewSheet h1 { margin:0 0 12px; color:#123c5a; font-size:34px; }
+.previewGrid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+.previewBox { border:1px solid #d8e1ea; border-radius:14px; padding:14px; }
+.previewBox h3 { margin:0 0 12px; color:#123c5a; font-size:22px; }
+.chips { display:flex; flex-wrap:wrap; gap:8px; }
+.chip { border:1px solid #bcd0e3; color:#123c5a; background:#f7fbff; padding:6px 10px; border-radius:999px; font-size:14px; font-weight:700; }
+.previewDay { border:1px solid #d8e1ea; border-radius:14px; overflow:hidden; margin-bottom:14px; }
+.previewDayHead { display:flex; justify-content:space-between; gap:10px; background:#f8fbfe; padding:12px 14px; border-bottom:1px solid #dde6ef; align-items:center; }
+.previewDayHead .left strong { display:block; font-size:22px; color:#123c5a; }
+.previewDayHead .left span { color:#52606d; }
+.previewDayHead .right { font-weight:800; color:#123c5a; }
+.previewTable { width:100%; border-collapse:collapse; }
+.previewTable th, .previewTable td { border-bottom:1px solid #e1e8ef; padding:10px 12px; text-align:left; vertical-align:top; }
+.previewTable th { background:#fff; color:#123c5a; }
+.previewFoot { border-top:2px solid #dce6ef; margin-top:20px; padding-top:14px; color:#4d5a67; font-size:14px; font-weight:700; text-align:center; }
+.hiddenPrint { display:block; }
+.copyrightFooter { text-align:center; margin:18px 0 8px; color:#46515c; font-size:14px; font-weight:700; }
+@media (max-width:1150px) { .layout { grid-template-columns:1fr; } }
+@media (max-width:900px) { .taskRow { grid-template-columns:1fr; } .bottomBar { grid-template-columns:1fr 1fr; } .row2 { grid-template-columns:1fr; } .dayHeader { grid-template-columns:1fr; } .previewGrid { grid-template-columns:1fr; } .header-left,.header-right { min-width:auto; } }
+@media (max-width:620px) { .bottomBar { grid-template-columns:1fr; } header { flex-wrap:wrap; } .header-title { order:-1; width:100%; } .header-left,.header-right { width:100%; justify-content:space-between; } .objActions { flex-direction:column; } }
+@media print { body { background:#fff; } header, main>.notice, main>.layout>.leftCol, .savedSection, .bottomBar, .previewToolbar, .hiddenPrint { display:none !important; } .previewOverlay { display:block !important; position:static; background:#fff; padding:0; } .previewWrap { max-width:none; } .previewSheet { box-shadow:none; border-radius:0; padding:0; } }
+</style>
+</head>
+<body>
+<a href="index.html" class="suiteHomeButton noPrint" style="position:fixed;right:10px;top:10px;z-index:99999;background:#0b2740;color:#fff;padding:9px 12px;border-radius:10px;text-decoration:none;font:700 14px -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;box-shadow:0 4px 14px #0004;border:1px solid #ffffff33">⌂ Hauptmenü</a>
+
+<header>
+  <div class="header-left"><button class="topbtn" type="button" onclick="openHelp()">☰ Menü</button></div>
+  <div class="header-title">Arbeitsnachweis / Rapport – Eingabe</div>
+  <div class="header-right">
+    <button class="topbtn" type="button" onclick="saveReport()">💾 Speichern</button>
+    <button class="topbtn" type="button" onclick="openPreview()">👁 Vorschau</button>
+  </div>
+</header>
+<main>
+  <div class="notice">Lokale Speicherung nur auf diesem Gerät • Keine automatische Cloud-Übertragung • Keine eingebauten Arbeitgeberdaten</div>
+  <div class="layout">
+    <div class="leftCol">
+      <section class="card">
+        <h2>1. Angaben</h2>
+        <div class="row2">
+          <div>
+            <label for="kw">Woche (KW) *</label>
+            <input id="kw" type="number" min="1" max="53" value="1" oninput="updateDates();refreshAll()">
+          </div>
+          <div>
+            <label for="year">Jahr *</label>
+            <input id="year" type="number" min="2024" max="2099" value="2026" oninput="updateDates();refreshAll()">
+          </div>
+        </div>
+        <div style="margin-top:12px">
+          <label for="employee">Mitarbeiter *</label>
+          <input id="employee" type="text" placeholder="Name eingeben" oninput="refreshAll()">
+        </div>
+      </section>
+
+    </div>
+
+    <div>
+      <section class="card">
+        <h2>2. Tätigkeiten und Stunden</h2>
+        <div class="infoBand">Einfache Erfassung: Stunden werden nur addiert. Keine Mindeststunden, keine Wochen-Sollprüfung.</div>
+        <div id="summaryBand" class="summaryBand"></div>
+        <div id="daysContainer" style="margin-top:14px"></div>
+      </section>
+    </div>
+  </div>
+
+  <div class="bottomBar hiddenPrint">
+    <button class="secondary" type="button" onclick="newForm()">Neu</button>
+    <button type="button" onclick="saveReport()">Speichern</button>
+    <button type="button" onclick="openPreview()">Als PDF / Vorschau</button>
+    <button type="button" onclick="printPreview()">Drucken / Teilen</button>
+    <button class="green" type="button" onclick="exportCSV()">CSV für Excel</button>
+    <button class="secondary" type="button" onclick="openHelp()">Anleitung</button>
+  </div>
+
+  <section class="card savedSection" style="margin-top:16px">
+    <h2>Gespeicherte Rapporte <span id="savedCount">0</span></h2>
+    <div class="savedTableWrap">
+      <table class="saved">
+        <thead>
+          <tr><th>KW/Jahr</th><th>Mitarbeiter</th><th>Gesamtstunden</th><th>Aktion</th></tr>
+        </thead>
+        <tbody id="savedBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="copyrightFooter">© 2026 Ralf Peter Jung – Alle Rechte vorbehalten.</div>
+</main>
+
+<div class="previewOverlay" id="previewOverlay">
+  <div class="previewWrap">
+    <div class="previewToolbar hiddenPrint">
+      <div style="display:flex; gap:10px; flex-wrap:wrap">
+        <button class="secondary" type="button" onclick="closePreview()">Schließen</button>
+        <button type="button" onclick="window.print()">Drucken</button>
+        <button class="green" type="button" onclick="exportCSV()">CSV für Excel</button>
+      </div>
+      <div class="muted" style="background:#fff;padding:10px 14px;border-radius:12px">Vorschau im gleichen Aufbau wie das Eingabeformular</div>
+    </div>
+    <div class="previewSheet" id="previewSheet"></div>
+  </div>
+</div>
+
+<div class="previewOverlay" id="helpOverlay">
+  <div class="previewWrap">
+    <div class="previewToolbar hiddenPrint">
+      <button class="secondary" type="button" onclick="closeHelp()">Schließen</button>
+    </div>
+    <div class="previewSheet">
+      <h1>App-Anleitung – Arbeitsnachweis / Rapport</h1>
+      <div class="muted" style="font-size:16px; line-height:1.65">
+        <h2>1. App öffnen und verwenden</h2>
+        <p>Die App kann im Browser auf iPad, iPhone oder Windows verwendet werden. Für den ersten Aufruf und für Updates muss die Seite erreichbar sein. Bereits geladene App-Dateien werden für die Offline-Nutzung zwischengespeichert.</p>
+        <p>Auf unterstützten Geräten kann die Seite über das Browser-Menü zum Home-Bildschirm hinzugefügt werden. Alternativ kann sie als Favorit/Lesezeichen geöffnet werden.</p>
+
+        <h2>2. Neue Woche anlegen</h2>
+        <p>Oben die Kalenderwoche, das Jahr und den Mitarbeiternamen eintragen. Über <b>Neu</b> wird ein leeres Formular für eine neue Woche erstellt.</p>
+
+        <h2>3. Tätigkeiten und Stunden erfassen</h2>
+        <p>Für Montag bis Freitag stehen eigene Bereiche zur Verfügung. Pro Zeile werden <b>Tätigkeit</b>, <b>Objekt / Einsatzort</b> und <b>Stunden</b> eingetragen. Über <b>+ Zeile</b> können beliebig weitere Einträge ergänzt werden. Mit dem roten Papierkorb wird eine Zeile entfernt.</p>
+        <p>Die App prüft keine Mindest- oder Sollstunden. Sie addiert ausschließlich die eingegebenen Stunden. Unter jedem Tag wird die Tagessumme angezeigt; oben wird die gesamte erfasste Wochenzeit zusammengezählt.</p>
+
+        <h2>5. Speichern und später weiterbearbeiten</h2>
+        <p>Mit <b>Speichern</b> wird der aktuelle Rapport lokal im Browser dieses Geräts gespeichert. Gespeicherte Rapporte erscheinen unten in der Liste und können mit <b>Laden</b> wieder geöffnet oder mit <b>Löschen</b> entfernt werden.</p>
+        <p><b>Wichtig:</b> Werden Browser-/Website-Daten gelöscht oder der Browser vollständig zurückgesetzt, können lokal gespeicherte Rapporte verloren gehen.</p>
+
+        <h2>6. Vorschau, PDF, Drucken und Teilen</h2>
+        <p>Über <b>Als PDF / Vorschau</b> wird eine übersichtliche Ausgabe erzeugt, die sich am Eingabeformular orientiert. Über <b>Drucken / Teilen</b> kann die System-Druckfunktion geöffnet werden. Dort kann – je nach Gerät – gedruckt, als PDF gesichert oder über die Freigabefunktion weitergegeben werden.</p>
+
+        <h2>7. CSV für Excel</h2>
+        <p>Mit <b>CSV für Excel</b> wird der aktuell angezeigte Rapport als CSV-Datei exportiert. Enthalten sind Kalenderwoche, Jahr, Mitarbeiter, Tag, Datum, Tätigkeit, Objekt, Einzelstunden, Tagessumme und gesamte Wochenstunden.</p>
+        <p>Die Datei verwendet eine für deutsche Excel-Versionen geeignete Semikolon-Trennung und kann in Excel geöffnet bzw. importiert werden.</p>
+
+        <h2>8. Datenschutz</h2>
+        <p>Die App überträgt die eingegebenen Rapportdaten nicht automatisch an einen Server oder eine Cloud. Die Datenhaltung erfolgt lokal im Browser des verwendeten Geräts. Die App enthält keinen eingebauten Firmen- oder Arbeitgebernamen.</p>
+        <p>Beim normalen Laden einer über GitHub Pages bereitgestellten App entsteht technisch eine Verbindung zum Hosting-Dienst, um die App-Dateien abzurufen. Die von dir eingegebenen Rapportdaten werden durch die App dabei nicht hochgeladen.</p>
+        <p>Erst wenn du selbst eine CSV-Datei exportierst, druckst, als PDF speicherst oder die Teilen-Funktion verwendest, können Daten das Gerät über den von dir gewählten Weg verlassen.</p>
+
+        <h2>9. Aktualisierung der App</h2>
+        <p>Nach einer neuen Version kann der Browser kurzfristig noch eine ältere Offline-Version anzeigen. Dann die Seite neu laden. Falls erforderlich, die Home-Bildschirm-Verknüpfung neu öffnen bzw. die alte Website-Zwischenspeicherung des Browsers aktualisieren.</p>
+
+        <h2>10. Empfohlener Arbeitsablauf</h2>
+        <p><b>KW/Jahr eintragen → Mitarbeiter eintragen → Tätigkeiten, Objekt und Stunden je Zeile erfassen → Gesamtstunden kontrollieren → Speichern → Vorschau prüfen → CSV/PDF/Druck bei Bedarf ausgeben.</b></p>
+      </div>
+    </div>
+  </div></div>
+
+<script>
+const OBJECTS = ["4003 – Bretzenheimer Str.", "4007 – Alte Ziegelei", "4008 – Ludwigsb. Str.", "4009 – Zwerchallee 14/16", "4010 – Wilh.-Quetsch", "4011 – Wormser Straße 187", "4013 – Zwerchallee 8–12 und 18–20", "4014 – Housing Area", "4020 – Allianzhaus", "4024 – Hotel Alt Finthen", "4025 – Hotel Draiser Hof", "4026 – Heiligkreuzweg", "4027 – Hechtsheimer Str.", "4028 – Isaac-Fulda", "4029 – Layenhof", "4030 – Bahnhofstr.", "4031 – Nikolaus-Kopernikus", "4032 – Zitadelle", "4033 – Layenhof 2"];
+const DAYS = [
+  { key:'mo', name:'Mo', long:'Montag' },
+  { key:'di', name:'Di', long:'Dienstag' },
+  { key:'mi', name:'Mi', long:'Mittwoch' },
+  { key:'do', name:'Do', long:'Donnerstag' },
+  { key:'fr', name:'Fr', long:'Freitag' }
+];
+const TASK_GROUPS = [
+  { category:'Sanitär', items:[
+    'Kontrollgang',
+    'Küche',
+    'Verstopfung beseitigen',
+    'Instand setzen',
+    'WC, Urinal, WT, Dusche',
+    'Küchenspüle'
+  ]},
+  { category:'Schreiner', items:[
+    'Tür gang- und schließbar gemacht',
+    'Fenster gang- und schließbar gemacht',
+    'Kontrolle'
+  ]},
+  { category:'Heizung', items:[
+    'Thermostatkopf erneuert',
+    'Heizung überprüft und instand gesetzt',
+    'Kontrolle'
+  ]},
+  { category:'Elektro', items:[
+    'Leuchtmittel erneuert',
+    'Waschmaschine/Trockner reinigen',
+    'Waschmaschine/Trockner austauschen',
+    'Rauchwarnmelder ausgelöst; zurück gesetzt',
+    'Kontrolle',
+    'Instand setzen'
+  ]},
+  { category:'Appartements', items:[
+    'Übergabe',
+    'Neubezug/Vor- oder Endabnahme',
+    'Einrichten/Möbelaufbau'
+  ]},
+  { category:'Material', items:[
+    'Einkauf/Beschaffung (Lager)'
+  ]},
+  { category:'Sonstiges', items:[
+    'Einweisung Fremdfirma',
+    'Beauftragung Fremdfirma',
+    'Kontrolle Reinigung (Innen- und Außenbereich)',
+    'Verkehrssicherung',
+    'Kontrollgang Unterkunft',
+    'Gespräche mit Betreuer',
+    'Gespräche mit Büro (Sachbearbeiter)'
+  ]}
+];
+const TASK_VALUES = [...new Set(TASK_GROUPS.flatMap(g => g.items))];
+const STORE_KEY = 'rapport_v5_entries';
+const FORM_KEY = 'rapport_v5_form';
+let editId = null;
+let reports = [];
+
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[m]);
+}
+function parseHours(v) {
+  if (v === null || v === undefined) return 0;
+  v = String(v).trim().replace(',', '.');
+  if (!v) return 0;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : 0;
+}
+function formatHours(n) {
+  n = Math.round((n || 0) * 60);
+  const h = Math.floor(n / 60);
+  const m = String(n % 60).padStart(2,'0');
+  return `${h}:${m}`;
+}
+function csvHours(n) { return formatHours(n); }
+function isoWeekDates(year, week) {
+  year = Number(year) || new Date().getFullYear();
+  week = Number(week) || 1;
+  const simple = new Date(year, 0, 1 + (week - 1) * 7);
+  const dow = simple.getDay();
+  const monday = new Date(simple);
+  if (dow <= 4) monday.setDate(simple.getDate() - simple.getDay() + 1);
+  else monday.setDate(simple.getDate() + 8 - simple.getDay());
+  const out = [];
+  for (let i=0; i<5; i++) {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    out.push(d.toISOString().slice(0,10));
+  }
+  return out;
+}
+function defaultRows() { return [{ task:'', object:'', hours:'' }, { task:'', object:'', hours:'' }]; }
+function defaultForm() {
+  const now = new Date();
+  const temp = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+  temp.setUTCDate(temp.getUTCDate() + 4 - (temp.getUTCDay() || 7));
+  const yearStart = new Date(Date.UTC(temp.getUTCFullYear(),0,1));
+  const week = Math.ceil((((temp - yearStart) / 86400000) + 1) / 7);
+  const dates = isoWeekDates(now.getFullYear(), week);
+  const days = {};
+  DAYS.forEach((d,i) => days[d.key] = { date: dates[i], rows: defaultRows() });
+  return { kw: week, year: now.getFullYear(), employee:'', objects:[], days };
+}
+function getForm() { try { return JSON.parse(localStorage.getItem(FORM_KEY)) || defaultForm(); } catch(e) { return defaultForm(); } }
+function saveForm() { localStorage.setItem(FORM_KEY, JSON.stringify(collectForm())); }
+function loadReports() { try { reports = JSON.parse(localStorage.getItem(STORE_KEY)) || []; } catch(e) { reports = []; } }
+function saveReports() { localStorage.setItem(STORE_KEY, JSON.stringify(reports)); }
+function renderObjectList(selected=[]) {
+  const box = document.getElementById('objectList');
+  if (!box) return;
+  box.innerHTML = OBJECTS.map(obj => `<label class="objItem"><input type="checkbox" class="objCheck" value="${esc(obj)}" ${selected.includes(obj)?'checked':''} onchange="refreshAll();saveForm()"><span>${esc(obj)}</span></label>`).join('');
+}
+function taskOptions(selected='') {
+  const known = TASK_VALUES.includes(selected);
+  const custom = !!selected && !known;
+  let selectedUsed = false;
+  let html = '<option value="">Baustein auswählen</option>';
+  TASK_GROUPS.forEach(group => {
+    html += `<optgroup label="${esc(group.category)}">`;
+    group.items.forEach(item => {
+      const isSelected = item===selected && !selectedUsed;
+      if (isSelected) selectedUsed = true;
+      html += `<option value="${esc(item)}" ${isSelected?'selected':''}>${esc(item)}</option>`;
+    });
+    html += '</optgroup>';
+  });
+  html += `<option value="__custom__" ${custom?'selected':''}>Eigene Tätigkeit …</option>`;
+  return html;
+}
+function taskChanged(selectEl) {
+  const row = selectEl.closest('.taskRow');
+  const custom = row.querySelector('.customTask');
+  if (selectEl.value === '__custom__') {
+    custom.style.display = 'block';
+    setTimeout(() => custom.focus(), 0);
+  } else {
+    custom.value = '';
+    custom.style.display = 'none';
+  }
+  saveForm();
+  refreshAll();
+}
+function objectOptions(selected='') { return '<option value="">Bitte auswählen</option>' + OBJECTS.map(x => `<option value="${esc(x)}" ${x===selected?'selected':''}>${esc(x)}</option>`).join(''); }
+function renderDays(data) {
+  const wrap = document.getElementById('daysContainer');
+  wrap.innerHTML = DAYS.map(day => {
+    const entry = data.days[day.key];
+    const rows = entry.rows.map((r, idx) => `
+      <div class="taskRow">
+        <div class="taskChooser">
+          <select class="taskSelect" onchange="taskChanged(this)">${taskOptions(r.task)}</select>
+          <input class="customTask" type="text" placeholder="Eigene Tätigkeit eingeben" value="${TASK_VALUES.includes(r.task)?'':esc(r.task)}" style="display:${r.task && !TASK_VALUES.includes(r.task)?'block':'none'}" oninput="updateRow('${day.key}',${idx},'task',this.value)">
+          <div class="taskHint">Vorgegebene Tätigkeiten als Bausteine – freie Eingabe bleibt möglich.</div>
+        </div>
+        <select class="objectSelect" onchange="updateRow('${day.key}',${idx},'object',this.value)">${objectOptions(r.object)}</select>
+        <input class="hoursInput" type="number" min="0" max="24" step="0.25" placeholder="Std." value="${esc(r.hours)}" oninput="updateRow('${day.key}',${idx},'hours',this.value)">
+        <button class="red removeRow" type="button" onclick="removeRow('${day.key}',${idx})">🗑</button>
+      </div>
+    `).join('');
+    return `
+      <div class="dayBlock" id="block_${day.key}">
+        <div class="dayHeader">
+          <div><div class="dayName">${day.name}</div></div>
+          <div><label>Datum</label><input type="date" value="${esc(entry.date)}" onchange="updateDate('${day.key}',this.value)"></div>
+          <div class="muted">Tätigkeitsbaustein auswählen, Objekt und Stunden erfassen.</div>
+          <div><button class="small secondary" type="button" onclick="addRow('${day.key}')">＋ Zeile</button></div>
+        </div>
+        <div class="dayRows">${rows}</div>
+        <div class="dayFooter"><div class="dayTotal">Tagessumme: <span id="sum_${day.key}">0:00</span></div></div>
+      </div>
+    `;
+  }).join('');
+}
+function collectForm() {
+  const data = { kw:document.getElementById('kw').value.trim(), year:document.getElementById('year').value.trim(), employee:document.getElementById('employee').value.trim(), objects:[...document.querySelectorAll('.objCheck:checked')].map(x=>x.value), days:{} };
+  DAYS.forEach(day => {
+    data.days[day.key] = {
+      date: document.querySelector(`#block_${day.key} input[type="date"]`).value,
+      rows: [...document.querySelectorAll(`#block_${day.key} .taskRow`)].map(row => {
+        const taskSelect = row.querySelector('.taskSelect');
+        const customTask = row.querySelector('.customTask');
+        const object = row.querySelector('.objectSelect');
+        const hours = row.querySelector('.hoursInput');
+        const task = taskSelect.value === '__custom__' ? customTask.value.trim() : taskSelect.value;
+        return { task, object: object.value, hours: hours.value };
+      })
+    };
+  });
+  return data;
+}
+function setForm(data) { document.getElementById('kw').value=data.kw||''; document.getElementById('year').value=data.year||''; document.getElementById('employee').value=data.employee||''; renderObjectList(data.objects||[]); renderDays(data); refreshAll(); }
+function updateDates() { const data=collectForm(); const dates=isoWeekDates(data.year, data.kw); DAYS.forEach((day,i)=>{ const inp=document.querySelector(`#block_${day.key} input[type="date"]`); if(inp) inp.value=dates[i]; }); saveForm(); refreshAll(); }
+function updateDate(dayKey, value) { saveForm(); refreshAll(); }
+function updateRow(dayKey, index, field, value) { saveForm(); refreshAll(); }
+function addRow(dayKey) { const data=collectForm(); data.days[dayKey].rows.push({ task:'', object:'', hours:'' }); setForm(data); saveForm(); }
+function removeRow(dayKey, index) { const data=collectForm(); if(data.days[dayKey].rows.length<=1) data.days[dayKey].rows[0]={ task:'', object:'', hours:'' }; else data.days[dayKey].rows.splice(index,1); setForm(data); saveForm(); }
+function setAllObjects(on) { document.querySelectorAll('.objCheck').forEach(ch=>ch.checked=on); saveForm(); refreshAll(); }
+function evaluate(data) {
+  const result = { total:0, days:{}, messages:[] };
+  DAYS.forEach(day => {
+    const sum = (data.days[day.key].rows || []).reduce((acc,r)=>acc+parseHours(r.hours),0);
+    result.days[day.key] = { total:sum };
+    result.total += sum;
+  });
+  if (!String(data.kw||'').trim()) result.messages.push('KW fehlt.');
+  if (!String(data.year||'').trim()) result.messages.push('Jahr fehlt.');
+  if (!String(data.employee||'').trim()) result.messages.push('Mitarbeiter fehlt.');
+  return result;
+}
+function refreshAll() {
+  const data = collectForm();
+  const evals = evaluate(data);
+  DAYS.forEach(day => { document.getElementById(`sum_${day.key}`).textContent = formatHours(evals.days[day.key].total); });
+  const box = document.getElementById('summaryBand');
+  box.innerHTML = `Gesamt erfasste Stunden dieser Woche: <b>${formatHours(evals.total)} h</b>` + (evals.messages.length ? `<br><span style="color:#8d5a00">Hinweis: ${esc(evals.messages.join(' '))}</span>` : '');
+  saveForm();
+}
+function openPreview() { const data=collectForm(); if(!data.employee.trim()){alert('Bitte zuerst Mitarbeiter eintragen.');return;} buildPreview(data,evaluate(data)); document.getElementById('previewOverlay').style.display='block'; }
+function buildPreview(data, evals) {
+  const dayHtml = DAYS.map(day => {
+    const rows = (data.days[day.key].rows || []).filter(r => r.task || r.object || r.hours);
+    const body = rows.length ? rows.map(r => `<tr><td>${esc(r.task || '—')}</td><td>${esc(r.object || '—')}</td><td>${formatHours(parseHours(r.hours))}</td></tr>`).join('') : `<tr><td colspan="3">Keine Einträge</td></tr>`;
+    return `<div class="previewDay"><div class="previewDayHead"><div class="left"><strong>${day.long}</strong><span>${esc(data.days[day.key].date || '')}</span></div><div class="right">Tagessumme: ${formatHours(evals.days[day.key].total)}</div></div><table class="previewTable"><thead><tr><th>Tätigkeit / Arbeiten</th><th>Objekt / Einsatzort</th><th>Stunden</th></tr></thead><tbody>${body}</tbody></table></div>`;
+  }).join('');
+  document.getElementById('previewSheet').innerHTML = `
+    <h1>Arbeitsnachweis / Rapport – Vorschau</h1>
+    <div class="previewBox" style="margin-bottom:16px"><h3>1. Angaben</h3><div style="display:grid;grid-template-columns:180px 1fr;gap:10px;align-items:center"><div><b>Woche (KW)</b></div><div>${esc(data.kw)} / ${esc(data.year)}</div><div><b>Mitarbeiter</b></div><div>${esc(data.employee)}</div><div><b>Gesamtstunden</b></div><div>${formatHours(evals.total)} h</div></div></div>
+    <div class="previewBox" style="margin-bottom:16px"><h3>2. Tätigkeiten und Stunden</h3><div class="muted">Stunden werden nur addiert. Keine Mindeststunden und keine Wochen-Sollprüfung.</div></div>
+    ${dayHtml}
+    <div class="previewFoot">Gesamtsumme Woche: ${formatHours(evals.total)} h • Datenschutz: Bericht lokal erstellt • Keine automatische Cloud-Übertragung • Keine Arbeitgeberdaten im Formular.<br><br><b>© 2026 Ralf Peter Jung – Alle Rechte vorbehalten.</b></div>`;
+}
+function closePreview() { document.getElementById('previewOverlay').style.display='none'; }
+function printPreview() { openPreview(); setTimeout(()=>window.print(),100); }
+function openHelp() { document.getElementById('helpOverlay').style.display='block'; }
+function closeHelp() { document.getElementById('helpOverlay').style.display='none'; }
+function newForm() { if(!confirm('Neues Formular laden? Nicht gespeicherte Änderungen gehen verloren.')) return; editId=null; const f=defaultForm(); setForm(f); saveForm(); }
+function saveReport() {
+  const data = collectForm();
+  if (!data.employee.trim()) { alert('Bitte Mitarbeiter eintragen.'); return; }
+  const evals = evaluate(data);
+  const item = { id: editId || String(Date.now()), savedAt:new Date().toISOString(), data, total:evals.total };
+  const idx = reports.findIndex(x=>x.id===item.id);
+  if(idx>=0) reports[idx]=item; else reports.unshift(item);
+  editId = item.id;
+  saveReports();
+  renderSaved();
+  alert('Rapport lokal gespeichert.');
+}
+function renderSaved() {
+  const body = document.getElementById('savedBody');
+  document.getElementById('savedCount').textContent = String(reports.length);
+  if(!reports.length) { body.innerHTML='<tr><td colspan="4">Noch keine Rapporte gespeichert.</td></tr>'; return; }
+  body.innerHTML = reports.map(r => `<tr><td>${esc(r.data.kw)} / ${esc(r.data.year)}</td><td>${esc(r.data.employee)}</td><td>${formatHours(r.total)}</td><td style="display:flex;gap:8px;flex-wrap:wrap"><button class="small secondary" type="button" onclick="loadReport('${r.id}')">Laden</button><button class="small red" type="button" onclick="deleteReport('${r.id}')">Löschen</button></td></tr>`).join('');
+}
+function loadReport(id) { const item=reports.find(x=>x.id===id); if(!item) return; editId=item.id; setForm(item.data); saveForm(); window.scrollTo({top:0,behavior:'smooth'}); }
+function deleteReport(id) { if(!confirm('Diesen Rapport löschen?')) return; reports=reports.filter(x=>x.id!==id); saveReports(); renderSaved(); }
+function exportCSV() {
+  const data = collectForm();
+  const evals = evaluate(data);
+  const lines = [];
+  lines.push(['KW','Jahr','Mitarbeiter','Tag','Datum','Tätigkeit','Objekt','Stunden','Tagessumme','Wochenstunden'].join(';'));
+  DAYS.forEach(day => {
+    const rows = (data.days[day.key].rows || []).filter(r => r.task || r.object || r.hours);
+    if (!rows.length) {
+      lines.push([data.kw,data.year,data.employee,day.long,data.days[day.key].date,'','','',csvHours(evals.days[day.key].total),csvHours(evals.total)].map(v => '"'+String(v??'').replace(/"/g,'""')+'"').join(';'));
+    } else {
+      rows.forEach(r => {
+        lines.push([data.kw,data.year,data.employee,day.long,data.days[day.key].date,r.task||'',r.object||'',csvHours(parseHours(r.hours)),csvHours(evals.days[day.key].total),csvHours(evals.total)].map(v => '"'+String(v??'').replace(/"/g,'""')+'"').join(';'));
+      });
+    }
+  });
+  const blob = new Blob(["\ufeff" + lines.join("\n")], {type:"text/csv;charset=utf-8;"});
+  const a = document.createElement('a');
+  const kw = data.kw || 'KW';
+  const year = data.year || 'Jahr';
+  const name = (data.employee || 'Mitarbeiter').replace(/[^a-z0-9äöüß_\-]+/gi,'_');
+  a.href = URL.createObjectURL(blob);
+  a.download = `Rapport_${kw}_${year}_${name}.csv`;
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
+}
+
+loadReports();
+renderObjectList([]);
+setForm(getForm());
+renderSaved();
+if ('serviceWorker' in navigator) { window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{})); }
+</script>
+</body>
+</html>
