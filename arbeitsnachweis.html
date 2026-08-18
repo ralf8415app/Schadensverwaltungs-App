@@ -74,7 +74,6 @@ table.saved th { background:#edf3f8; }
 .previewTable th { background:#fff; color:#123c5a; }
 .previewFoot { border-top:2px solid #dce6ef; margin-top:20px; padding-top:14px; color:#4d5a67; font-size:14px; font-weight:700; text-align:center; }
 .hiddenPrint { display:block; }
-.copyrightFooter { text-align:center; margin:18px 0 8px; color:#46515c; font-size:14px; font-weight:700; }
 @media (max-width:1150px) { .layout { grid-template-columns:1fr; } }
 @media (max-width:900px) { .taskRow { grid-template-columns:1fr; } .bottomBar { grid-template-columns:1fr 1fr; } .row2 { grid-template-columns:1fr; } .dayHeader { grid-template-columns:1fr; } .previewGrid { grid-template-columns:1fr; } .header-left,.header-right { min-width:auto; } }
 @media (max-width:620px) { .bottomBar { grid-template-columns:1fr; } header { flex-wrap:wrap; } .header-title { order:-1; width:100%; } .header-left,.header-right { width:100%; justify-content:space-between; } .objActions { flex-direction:column; } }
@@ -147,7 +146,7 @@ table.saved th { background:#edf3f8; }
     </div>
   </section>
 
-  <div class="copyrightFooter">© 2026 Ralf Peter Jung – Alle Rechte vorbehalten.</div>
+  
 </main>
 
 <div class="previewOverlay" id="previewOverlay">
@@ -439,7 +438,7 @@ function buildPreview(data, evals) {
     <div class="previewBox" style="margin-bottom:16px"><h3>1. Angaben</h3><div style="display:grid;grid-template-columns:180px 1fr;gap:10px;align-items:center"><div><b>Woche (KW)</b></div><div>${esc(data.kw)} / ${esc(data.year)}</div><div><b>Mitarbeiter</b></div><div>${esc(data.employee)}</div><div><b>Gesamtstunden</b></div><div>${formatHours(evals.total)} h</div></div></div>
     <div class="previewBox" style="margin-bottom:16px"><h3>2. Tätigkeiten und Stunden</h3><div class="muted">Stunden werden nur addiert. Keine Mindeststunden und keine Wochen-Sollprüfung.</div></div>
     ${dayHtml}
-    <div class="previewFoot">Gesamtsumme Woche: ${formatHours(evals.total)} h • Datenschutz: Bericht lokal erstellt • Keine automatische Cloud-Übertragung • Keine Arbeitgeberdaten im Formular.<br><br><b>© 2026 Ralf Peter Jung – Alle Rechte vorbehalten.</b></div>`;
+    <div class="previewFoot">Gesamtsumme Woche: ${formatHours(evals.total)} h • Datenschutz: Bericht lokal erstellt • Keine automatische Cloud-Übertragung • Keine Arbeitgeberdaten im Formular.<br><br></div>`;
 }
 function closePreview() { document.getElementById('previewOverlay').style.display='none'; }
 function printPreview() { openPreview(); setTimeout(()=>window.print(),100); }

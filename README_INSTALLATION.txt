@@ -25,4 +25,4 @@ Die vorhandenen QR-PNG-Dateien wurden aus der hochgeladenen Version übernommen.
 GITHUB PAGES
 Alle Dateien aus diesem Ordner auf die oberste Ebene des Repositorys laden. index.html muss im Hauptverzeichnis liegen.
 
-© 2026 Ralf Peter Jung – Alle Rechte vorbehalten.
+
