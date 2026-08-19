@@ -25,6 +25,9 @@ main{max-width:1180px;margin:-18px auto 0;padding:0 14px 34px}.intro{background:
 .infoPanel{margin-top:25px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:17px 18px;display:grid;grid-template-columns:1fr 1fr;gap:18px}.infoPanel h3{margin:0 0 7px;font-size:16px}.infoPanel p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}.miniActions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.miniActions a,.miniActions button{border:1px solid #cad5dc;background:#f8fafb;color:#183044;border-radius:10px;padding:9px 11px;font:750 13px inherit;text-decoration:none;cursor:pointer}
 footer{text-align:center;color:#71808d;font-size:12px;padding:6px 16px calc(20px + env(safe-area-inset-bottom));line-height:1.5}
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:580px){.hero{padding-left:14px;padding-right:14px}.brand img{width:51px;height:51px}.intro{align-items:flex-start;flex-direction:column}.storageBadge{white-space:normal}.grid{grid-template-columns:1fr}.card{min-height:166px}.infoPanel{grid-template-columns:1fr}.sectionHead{align-items:start;flex-direction:column;gap:3px}}
+
+.appCopyright{text-align:center;margin-top:10px;font-weight:700}
+@media print{.appCopyright{display:none!important}}
 </style>
 </head>
 <body>
@@ -48,7 +51,7 @@ footer{text-align:center;color:#71808d;font-size:12px;padding:6px 16px calc(20px
 </section>
 <section class="infoPanel"><div><h3>Datenschutz & Speicherung</h3><p>Die Startseite liest keine Fachdaten aus den Modulen. Sie prüft nur, ob lokaler Browser-Speicher grundsätzlich funktioniert. Löschen von Browser-/Websitedaten kann lokale App-Daten entfernen.</p></div><div><h3>Verkehrssicherheit – QR-Unterlagen</h3><p>Die vorhandenen QR-Druckseiten sind mit enthalten. Bereits gedruckte QR-Codes können noch auf die bisherige Webadresse zeigen und sollten nach einem endgültigen Umzug geprüft werden.</p><div class="miniActions"><a href="QR_Codes_Direktaufruf.html">Direkt-QR-Blatt</a><a href="QR_Codes_Objekte.html">Objekt-QR-Blatt</a><button type="button" onclick="location.reload()">Status neu prüfen</button></div></div></section>
 </main>
-<footer><br>Haupt-App ohne gemeinsame Fachdatenbank.</footer>
+<footer><span class="appCopyright">© 2026 Ralf Peter Jung – Alle Rechte vorbehalten.</span><br>Haupt-App ohne gemeinsame Fachdatenbank.</footer>
 <script>
 (function(){
  const net=document.getElementById('netState'), store=document.getElementById('storageState');

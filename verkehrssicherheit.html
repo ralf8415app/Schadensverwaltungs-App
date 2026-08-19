@@ -55,7 +55,8 @@ button.green{background:var(--green)}button.red{background:var(--red)}button.gre
  body.compactPrintMode .printPage:last-child{break-after:auto;page-break-after:auto}
 }
 
-</style>
+
+<style>.appCopyright{display:block}@media print{.appCopyright{display:none!important}}</style>
 </head>
 <body>
 <a href="index.html" class="suiteHomeButton noPrint" style="position:fixed;right:10px;top:10px;z-index:99999;background:#0b2740;color:#fff;padding:9px 12px;border-radius:10px;text-decoration:none;font:700 14px -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;box-shadow:0 4px 14px #0004;border:1px solid #ffffff33">⌂ Hauptmenü</a>
@@ -146,6 +147,7 @@ button.green{background:var(--green)}button.red{background:var(--red)}button.gre
 <section class="card">
 <p class="muted"> <b>Datenschutz:</b> Kontrolldaten/Einstellungen liegen lokal in Edge Local Storage, Fotos lokal in IndexedDB; Programmdateien werden im Service-Worker-Cache vorgehalten. Backup-Dateien sind nicht zusätzlich verschlüsselt und müssen geschützt abgelegt werden. E-Mail/Teilen übergibt ausschließlich bewusst ausgewählte Inhalte an den jeweils verwendeten externen Dienst. Verantwortlichkeiten, Rechtsgrundlage, Löschfristen, Berechtigungen und organisatorische Maßnahmen sind durch den Betreiber festzulegen. Diese App ersetzt keine vorgeschriebenen Fachprüfungen.</p>
 </section>
+<section class="card appCopyright noPrint"><p class="muted"><b>© 2026 Ralf Peter Jung – Alle Rechte vorbehalten.</b></p></section>
 </main>
 
 <div id="qrScannerOverlay" class="qrScannerOverlay noPrint" aria-hidden="true">
